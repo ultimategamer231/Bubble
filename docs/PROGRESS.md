@@ -1,4 +1,4 @@
-Resume here: Phase 1 PR — wait for CI, merge, publish `phase-0-fix1` (standalone debug APK) from `main`, verify the asset contains `assets/index.android.bundle`, then stop at the 📱 Phase 0 gate.
+Resume here: 📱 Phase 0 gate — waiting for the owner's install result for `phase-0-fix1` and the exact phone model. Then build Phase 2 (native spike) on `phase-2-native-spike`.
 
 # Progress
 
@@ -6,8 +6,8 @@ Resume here: Phase 1 PR — wait for CI, merge, publish `phase-0-fix1` (standalo
 | Phase | State | PR | CI run | APK/release | Owner result |
 |---|---|---|---|---|---|
 | Bootstrap | Done | — (direct seed of empty repo, owner-approved) | — | — | — |
-| 0 — Scaffold, CI, first APK | Merged; APK being republished | [#1](https://github.com/ultimategamer231/Bubble/pull/1) | [ci 43946375830](https://github.com/ultimategamer231/Bubble/actions/runs/43946375830) · [android 43946375786](https://github.com/ultimategamer231/Bubble/actions/runs/43946375786) | `phase-0` published but **not usable** (no JS bundle); `phase-0-fix1` pending | pending |
-| 1 — Pure domain | In review | pending | pending | n/a (no phone gate) | n/a |
+| 0 — Scaffold, CI, first APK | Merged; 📱 gate sent | [#1](https://github.com/ultimategamer231/Bubble/pull/1) | [ci 43946375830](https://github.com/ultimategamer231/Bubble/actions/runs/43946375830) · [android 43946375786](https://github.com/ultimategamer231/Bubble/actions/runs/43946375786) | [phase-0-fix1](https://github.com/ultimategamer231/Bubble/releases/tag/phase-0-fix1) · 121,326,550 bytes (`phase-0` is superseded: no JS bundle) | waiting |
+| 1 — Pure domain | Done | [#2](https://github.com/ultimategamer231/Bubble/pull/2) | [ci 43953509699](https://github.com/ultimategamer231/Bubble/actions/runs/43953509699) · [android 43953509692](https://github.com/ultimategamer231/Bubble/actions/runs/43953509692) | n/a (no phone gate) | n/a |
 | 2 — Native spike | Not started | | | | |
 | 3 — Data + TimerController | Not started | | | | |
 | 4 — UI | Not started | | | | |
@@ -21,7 +21,7 @@ Samsung, Android 14 / One UI 6 (owner-stated 2026-11-16). Exact model: **not yet
 ## Environment notes (apply to every phase)
 - Cloud sandbox: Node v22.23.4, npm 10.9.9, git 2.43.0. No Android SDK or emulator; Gradle runs only in GitHub Actions.
 - `gh` CLI is installed but **not authenticated** here (`gh auth status` → "The token in GH_TOKEN is invalid"). PRs, checks, merges, workflow runs and release lookups are done through the session's GitHub integration instead; same operations, different client.
-- `git push` of branches works. **Deleting remote branches is refused** by the session's git proxy (`git push origin --delete tmp/push-check` → "remote end hung up unexpectedly"), so merged phase branches and `tmp/push-check` stay on the remote until the owner deletes them (or enables Settings → General → "Automatically delete head branches").
+- `git push` of branches works. **Deleting remote branches is refused** by the session's git proxy (`git push origin --delete tmp/push-check` → "remote end hung up unexpectedly"), so merged phase branches (`phase-0-scaffold`, `phase-1-domain-core`), the superseded `phase-1-domain` and `tmp/push-check` stay on the remote until the owner deletes them (or enables Settings → General → "Automatically delete head branches").
 - Repo is public (owner-stated), so release APKs download without signing in.
 
 ## Log
@@ -66,7 +66,8 @@ CI history
 
 Decisions: T-12 to T-18, T-23 (see DECISIONS.md); O-05 resolved (repo public).
 Blockers: none.
-Next: publish `phase-0-fix1` → 📱 gate.
+- `phase-0-fix1` published from `main` `f92b97c` after PR #2 merged: https://github.com/ultimategamer231/Bubble/releases/tag/phase-0-fix1, asset `FocusBubble-phase-0-fix1-debug.apk`, **121,326,550 bytes**, sha256 `1e2f00a7…c42d`. Verified by download: `unzip -l` shows `assets/index.android.bundle` (1,970,228 bytes) and both Nunito fonts.
+- 📱 Gate sent 2026-11-16. Owner result: waiting.
 
 ### Phase 1 — 2026-11-16
 Work done (pure TypeScript, no React/Expo imports in `src/domain`)
@@ -81,4 +82,5 @@ Local results
 - QA_TEST_PLAN §A items 1–16: all covered by tests named after the item (`A1 start`, `A5 long-break cycle`, …; A16 = `golden vectors`).
 
 Decisions: T-19 to T-22. Blockers: none.
+CI: PR #2 green — [ci 43953509699](https://github.com/ultimategamer231/Bubble/actions/runs/43953509699), [android 43953509692](https://github.com/ultimategamer231/Bubble/actions/runs/43953509692) (11.5 min, includes the new bundle check). Squash-merged as `f92b97c`.
 Next: Phase 0 gate (owner), then Phase 2 native spike.
