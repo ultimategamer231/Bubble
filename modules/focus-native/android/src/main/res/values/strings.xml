@@ -1,0 +1,10 @@
+<resources>
+    <!-- Users see these in Settings → Apps → Focus Bubble → Notifications. -->
+    <string name="focus_channel_running_name">Running session</string>
+    <string name="focus_channel_running_desc">Shows the countdown while a focus session or break is running. Silent.</string>
+    <string name="focus_channel_alerts_name">Session alerts</string>
+    <string name="focus_channel_alerts_desc">Tells you when a focus session or break ends.</string>
+    <string name="focus_action_pause">Pause</string>
+    <string name="focus_action_resume">Resume</string>
+    <string name="focus_action_end">End</string>
+</resources>

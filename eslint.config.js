@@ -10,7 +10,7 @@ module.exports = defineConfig([
     languageOptions: { globals: require('globals').jest },
   },
   {
-    files: ['**/*.cjs', 'plugins/**/*.js', '*.config.js'],
+    files: ['**/*.cjs', 'plugins/**/*.js', 'modules/**/plugin/*.js', '*.config.js', 'index.js'],
     languageOptions: { globals: require('globals').node },
   },
   {

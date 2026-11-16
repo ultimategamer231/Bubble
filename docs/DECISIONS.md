@@ -46,12 +46,16 @@ Format: ID · decision · reason · status. Claude Code appends new entries; it 
 | T-21 | 2026-11-16 | The focus intent is carried across breaks into the next focus session (break rows store no intent). Skipping or finishing a long break resets the cycle; skipping a focus never advances it | People usually continue the same task; the docs didn't say |
 | T-22 | 2026-11-16 | Break completions also raise a completion alert (`ShowCompletion` with the break row) | UI_UX §5 only words the focus alert, but a break that ends silently in the background is useless. Copy: "Break's over" / "Ready when you are." |
 | T-23 | 2026-11-16 | Phase test APKs are debug builds with the JS bundle embedded (`-PfocusBubble.standaloneDebug=true`, `plugins/withStandaloneDebug.js`) | A stock debug APK needs Metro on a computer; the owner tests on a phone alone. Still a debug build (debuggable, debug-signed, INTERNET present), so the Phase 2 debug screen is available in it |
+| T-24 | 2026-11-16 | One headless task, `FocusCommand`, carries both button commands and `Reconcile` (ARCHITECTURE §2 named two tasks). `isAllowedInForeground = true` | One code path; a notification button can also be tapped while the app is open |
+| T-25 | 2026-11-16 | Debug screen is bundled only when `__DEV__` or `EXPO_PUBLIC_DEBUG_SCREEN=1` (set by CI for debug APKs). Verified by grepping production bundles | "Absent from release" must mean the code is not shipped, not merely hidden |
+| T-26 | 2026-11-16 | Added dependency `expo-crypto` (session UUIDs); Hermes has no `crypto.randomUUID`. `package.json` `main` is now `index.js` so the headless task registers before the router | Not on the excluded list; installed with `npx expo install` |
+| T-27 | 2026-11-16 | Owner skipped the Phase 0 phone gate ("start phase 2 … self audit"). Phase 0 device items are recorded NOT RUN and re-checked as item 1 of the Phase 2 gate | Never mark a device item PASS without the owner |
 
 ## Open (decide during build; non-blocking)
 | ID | Question | Default until decided |
 |---|---|---|
 | O-01 | Final app icon artwork | Teal bubble on light aqua (see mockups) |
-| O-02 | Completion sound file | Short soft "pop"/chime, CC0 licensed, ≤50 KB |
+| O-02 | Completion sound file | **Resolved 2026-11-16:** two-note chime synthesised for the app (`focus_chime.wav`, 31 KB, no third-party licence). Owner may replace it |
 | O-03 | Exact bubble size constants | `PRD.md §8` formula |
 | O-04 | Organization vs personal Play account | Organization if D-U-N-S arrives by end of Phase 6 |
 | O-05 | Repo public or private | **Resolved 2026-11-16: public** (owner). Release APKs download without sign-in. |

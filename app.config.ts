@@ -56,6 +56,7 @@ const config: ExpoConfig = {
     ['expo-build-properties', { android: { minSdkVersion: 26 } }],
     './plugins/withReleaseNoInternet',
     './plugins/withStandaloneDebug',
+    './modules/focus-native/plugin/withFocusNative',
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
 };

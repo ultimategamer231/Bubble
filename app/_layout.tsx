@@ -8,9 +8,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style="auto" />
-      <Stack
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.bg } }}
-      />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.bg } }} />
     </>
   );
 }
