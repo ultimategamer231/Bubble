@@ -46,3 +46,44 @@ describe('withStandaloneDebug', () => {
     expect(() => addStandaloneDebug('react {}')).toThrow(/debuggableVariants marker/);
   });
 });
+
+describe('withFocusNative', () => {
+  const {
+    applyToManifest,
+    PERMISSIONS,
+  } = require('../modules/focus-native/plugin/withFocusNative');
+  const base = () => ({
+    manifest: {
+      'uses-permission': [{ $: { 'android:name': 'android.permission.VIBRATE' } }],
+      application: [{ $: {}, activity: [] }],
+    },
+  });
+  const names = (list) => list.map((i) => i.$['android:name']);
+
+  it('declares exactly the ARCHITECTURE §8 permissions, without duplicates', () => {
+    const out = applyToManifest(applyToManifest(base()));
+    expect(names(out.manifest['uses-permission']).sort()).toEqual([...PERMISSIONS].sort());
+    expect(PERMISSIONS).toEqual([
+      'android.permission.POST_NOTIFICATIONS',
+      'android.permission.SCHEDULE_EXACT_ALARM',
+      'android.permission.RECEIVE_BOOT_COMPLETED',
+      'android.permission.VIBRATE',
+      'android.permission.WAKE_LOCK',
+    ]);
+    for (const banned of ['USE_EXACT_ALARM', 'FOREGROUND_SERVICE', 'INTERNET']) {
+      expect(PERMISSIONS.join()).not.toContain(banned);
+    }
+  });
+
+  it('exports only the boot receiver', () => {
+    const app = applyToManifest(base()).manifest.application[0];
+    const exported = [...app.receiver, ...app.service]
+      .filter((c) => c.$['android:exported'] === 'true')
+      .map((c) => c.$['android:name']);
+    expect(exported).toEqual(['com.corexlr.focusbubble.focusnative.BootReceiver']);
+    expect(names(app.receiver)).toHaveLength(3);
+    expect(names(app.service)).toEqual([
+      'com.corexlr.focusbubble.focusnative.FocusHeadlessService',
+    ]);
+  });
+});

@@ -1,0 +1,30 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.corexlr.focusbubble.focusnative'
+version = '1.0.0'
+
+android {
+  namespace "com.corexlr.focusbubble.focusnative"
+  defaultConfig {
+    versionCode 1
+    versionName "1.0.0"
+  }
+  buildFeatures {
+    buildConfig true
+  }
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+}
+
+dependencies {
+  // React Native itself (HeadlessJsTaskService). Version comes from the app's RN Gradle plugin.
+  implementation 'com.facebook.react:react-android'
+  // NotificationCompat / NotificationManagerCompat.
+  implementation 'androidx.core:core-ktx:1.13.1'
+
+  testImplementation 'junit:junit:4.13.2'
+}

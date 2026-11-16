@@ -51,6 +51,9 @@ jobs:
 
       - name: Unit tests, lint and debug build
         working-directory: android
+        env:
+          # Bundles the hidden debug screen into phase test APKs. Release builds never set this.
+          EXPO_PUBLIC_DEBUG_SCREEN: '1'
         # Phones only (arm): skipping the x86 emulator ABIs halves build time and APK size.
         # standaloneDebug: bundle the JS into the debug APK so it runs without Metro.
         run: >-

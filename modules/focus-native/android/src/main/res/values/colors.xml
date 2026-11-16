@@ -1,0 +1,4 @@
+<resources>
+    <!-- Notification accent = BRAND.md primary. -->
+    <color name="focus_notification_accent">#0B7A77</color>
+</resources>

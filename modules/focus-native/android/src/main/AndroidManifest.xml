@@ -1,0 +1,4 @@
+<!-- Receivers, the headless service and permissions are added to the app manifest by
+     plugin/withFocusNative.js so that everything this module declares is in one place. -->
+<manifest>
+</manifest>
