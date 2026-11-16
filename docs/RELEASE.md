@@ -1,8 +1,8 @@
 # Build, Signing & Delivery
 
 ## Test APKs (every 📱 gate)
-1. Claude Code pushes, waits for CI (`gh run watch`), then tags `phase-N` and pushes the tag.
-2. `android.yml` publishes a GitHub pre-release with `FocusBubble-phase-N-debug.apk`.
+1. Claude Code merges the phase PR once CI is green, then runs `android.yml` on `main` with the input `release_tag=phase-N` (decision T-16).
+2. `android.yml` creates the tag and publishes a GitHub pre-release with `FocusBubble-phase-N-debug.apk`.
 3. Claude Code verifies the asset exists (`gh release view phase-N --json assets`) and reports the URL and byte size.
 4. Owner opens the release page on the phone (signed in to GitHub if the repo is private), downloads, installs (allow "Install unknown apps" for the browser once).
 Debug APKs are for testing only; never upload them to Play.

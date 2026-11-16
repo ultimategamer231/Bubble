@@ -31,6 +31,17 @@ Format: ID · decision · reason · status. Claude Code appends new entries; it 
 | T-10 | Navigation: Focus / Jar / Insights tabs, Settings via gear | Jar replaces the History tab |
 | T-11 | Headless JS for widget/notification commands, Kotlin-mirror fallback decided in Phase 2 | Single state machine if possible |
 
+## Decisions made during the build
+| ID | Date | Decision | Reason |
+|---|---|---|---|
+| T-12 | 2026-11-16 | Expo SDK 58.0.25 / React Native 0.88.1. compileSdk 37, targetSdk 36 (SDK defaults). minSdk pinned to **26** with `expo-build-properties` | The SDK's own minSdk is 24, lower than PRD §4 (Android 8.0), so the PRD value is enforced |
+| T-13 | 2026-11-16 | `android:allowBackup="false"` | "Nothing leaves the phone" (PRD §2): Android auto-backup would copy the database to the user's Google account. Consequence: history does not transfer to a new phone. Owner can reverse this before launch |
+| T-14 | 2026-11-16 | Nunito 600/700 TTFs are committed in `assets/fonts/` and embedded natively by the `expo-font` config plugin (no runtime font loading) | No flash of the system font, nothing to await at launch, no extra dependency |
+| T-15 | 2026-11-16 | Routes live in root `app/` (ARCHITECTURE §2), not the template's `src/app/`. `react-dom` is pinned at the SDK version as a dependency although the app is Android-only | Follows the architecture doc. `react-dom` is an optional peer of expo-router's dependencies; without the pin npm resolves a newer one and fails the install. It is not bundled into the Android app |
+| T-16 | 2026-11-16 | Workflow: `main` was seeded directly once (empty repo, owner-approved). Phase APKs are published by running `android.yml` manually with `release_tag`, which creates the tag and pre-release with `GITHUB_TOKEN` | The cloud session cannot push tags reliably or use `gh`; RELEASE.md's "push a tag" step is replaced by the workflow input |
+| T-17 | 2026-11-16 | Test device: Samsung, Android 14 / One UI 6 (exact model recorded at the Phase 0 gate) | Owner-stated; QA checklists are tailored to One UI |
+| T-18 | 2026-11-16 | CI builds only `arm64-v8a` and `armeabi-v7a` (no x86 emulator ABIs). `plugins/withLintCleanStyles.js` annotates Expo's generated splash style so `lintDebug` passes on minSdk 26 | No emulator is used anywhere; first CI build took 22 min with four ABIs. The lint error (`windowSplashScreenBehavior requires API 33`) comes from generated code and is harmless at runtime |
+
 ## Open (decide during build; non-blocking)
 | ID | Question | Default until decided |
 |---|---|---|
@@ -38,4 +49,4 @@ Format: ID · decision · reason · status. Claude Code appends new entries; it 
 | O-02 | Completion sound file | Short soft "pop"/chime, CC0 licensed, ≤50 KB |
 | O-03 | Exact bubble size constants | `PRD.md §8` formula |
 | O-04 | Organization vs personal Play account | Organization if D-U-N-S arrives by end of Phase 6 |
-| O-05 | Repo public or private | Private until launch |
+| O-05 | Repo public or private | **Resolved 2026-11-16: public** (owner). Release APKs download without sign-in. |
