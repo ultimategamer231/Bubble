@@ -1,0 +1,1531 @@
+{
+  "about": "Golden vectors for the timer reducer. Each vector starts from createInitialTimer(\"s0\", settings). settings = defaults overridden by the vector, then by the step. expect.state is a subset match; expect.effects is the exact ordered list of effect types; expect.recorded is a subset match, in order, of RecordSession rows.",
+  "version": 1,
+  "defaultSettings": {
+    "focusMin": 25,
+    "shortBreakMin": 5,
+    "longBreakMin": 15,
+    "longBreakEvery": 4,
+    "autoStartBreaks": false,
+    "autoStartFocus": false
+  },
+  "vectors": [
+    {
+      "name": "start, pause twice, resume, complete late, reconcile again",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "type": "FOCUS",
+              "status": "RUNNING",
+              "durationMs": 1500000,
+              "deadlineElapsedMs": 2500000,
+              "bootCount": 7,
+              "startedAtEpochMs": 1800000000000
+            },
+            "effects": ["ClearNotifications", "ScheduleAlarm", "ShowOngoing", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "s1",
+            "sessionId": "s0"
+          },
+          "now": {
+            "elapsedMs": 1600000,
+            "epochMs": 1800000600000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED",
+              "remainingMs": 900000,
+              "focusedMsBeforePause": 600000,
+              "deadlineElapsedMs": null
+            },
+            "effects": ["CancelAlarm", "ShowOngoing", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1720000,
+            "epochMs": 1800000720000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED",
+              "remainingMs": 900000
+            },
+            "effects": []
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1840000,
+            "epochMs": 1800000840000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED",
+              "remainingMs": 900000
+            },
+            "effects": ["CancelAlarm", "ShowOngoing", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Resume",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1900000,
+            "epochMs": 1800000900000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2800000,
+              "bootCount": 7
+            },
+            "effects": ["ScheduleAlarm", "ShowOngoing", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 2799999,
+            "epochMs": 1800001799999,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "sessionId": "s0"
+            },
+            "effects": ["ScheduleAlarm", "ShowOngoing", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 2805000,
+            "epochMs": 1800001805000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "COMPLETED",
+              "type": "FOCUS",
+              "remainingMs": 0,
+              "cycleCompleted": 1,
+              "deadlineElapsedMs": null
+            },
+            "effects": [
+              "RecordSession",
+              "ShowCompletion",
+              "CancelAlarm",
+              "ClearNotifications",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "s0",
+                "type": "FOCUS",
+                "status": "COMPLETED",
+                "intent": null,
+                "plannedMs": 1500000,
+                "focusedMs": 1500000,
+                "startedAtEpochMs": 1800000000000,
+                "endedAtEpochMs": 1800001800000,
+                "localDate": "2027-01-15",
+                "tzOffsetMin": 0,
+                "cycleIndex": 0,
+                "bubbleColor": 4,
+                "schemaVersion": 1
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s2"
+          },
+          "now": {
+            "elapsedMs": 2860000,
+            "epochMs": 1800001860000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            },
+            "effects": ["CancelAlarm", "ClearNotifications", "UpdateWidget"],
+            "recorded": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "duplicate start and stale session id are ignored",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2500000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s2"
+          },
+          "now": {
+            "elapsedMs": 1060000,
+            "epochMs": 1800000060000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2500000
+            },
+            "effects": []
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "s2",
+            "sessionId": "old-session"
+          },
+          "now": {
+            "elapsedMs": 1120000,
+            "epochMs": 1800000120000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            },
+            "effects": []
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reset",
+            "newSessionId": "s2",
+            "sessionId": "old-session"
+          },
+          "now": {
+            "elapsedMs": 1120000,
+            "epochMs": 1800000120000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "RUNNING"
+            },
+            "effects": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "reset during focus cancels without a bubble",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reset",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1300000,
+            "epochMs": 1800000300000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s1",
+              "type": "FOCUS",
+              "status": "IDLE",
+              "remainingMs": 1500000,
+              "cycleCompleted": 0,
+              "startedAtEpochMs": null
+            },
+            "effects": [
+              "RecordSession",
+              "ClearNotifications",
+              "CancelAlarm",
+              "ClearNotifications",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "CANCELLED",
+                "focusedMs": 300000,
+                "plannedMs": 1500000,
+                "endedAtEpochMs": 1800000300000,
+                "bubbleColor": null
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reset",
+            "newSessionId": "s2"
+          },
+          "now": {
+            "elapsedMs": 1360000,
+            "epochMs": 1800000360000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s1",
+              "status": "IDLE"
+            },
+            "effects": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "skip focus goes to a short break without advancing the cycle; skip break goes to focus",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1180000,
+            "epochMs": 1800000180000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Skip",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1540000,
+            "epochMs": 1800000540000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s1",
+              "type": "SHORT_BREAK",
+              "status": "IDLE",
+              "durationMs": 300000,
+              "cycleCompleted": 0
+            },
+            "recorded": [
+              {
+                "id": "s0",
+                "type": "FOCUS",
+                "status": "CANCELLED",
+                "focusedMs": 180000,
+                "bubbleColor": null
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s2"
+          },
+          "now": {
+            "elapsedMs": 1600000,
+            "epochMs": 1800000600000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s1",
+              "type": "SHORT_BREAK",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 1900000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Skip",
+            "newSessionId": "s2"
+          },
+          "now": {
+            "elapsedMs": 1660000,
+            "epochMs": 1800000660000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s2",
+              "type": "FOCUS",
+              "status": "IDLE",
+              "cycleCompleted": 0
+            },
+            "recorded": [
+              {
+                "id": "s1",
+                "type": "SHORT_BREAK",
+                "status": "CANCELLED",
+                "focusedMs": 60000,
+                "intent": null,
+                "bubbleColor": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "long break after 2 completed focus sessions",
+      "settings": {
+        "longBreakEvery": 2
+      },
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "a"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "a"
+          },
+          "now": {
+            "elapsedMs": 2500000,
+            "epochMs": 1800001500000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            },
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "COMPLETED",
+                "cycleIndex": 0
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "b1"
+          },
+          "now": {
+            "elapsedMs": 2560000,
+            "epochMs": 1800001560000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2860000,
+              "cycleCompleted": 1
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 2860000,
+            "epochMs": 1800001860000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            },
+            "recorded": [
+              {
+                "id": "b1",
+                "type": "SHORT_BREAK",
+                "status": "COMPLETED",
+                "bubbleColor": null
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "f2"
+          },
+          "now": {
+            "elapsedMs": 2920000,
+            "epochMs": 1800001920000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "f2",
+              "type": "FOCUS",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 4420000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 4420000,
+            "epochMs": 1800003420000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "f2",
+              "status": "COMPLETED",
+              "cycleCompleted": 2
+            },
+            "recorded": [
+              {
+                "id": "f2",
+                "status": "COMPLETED",
+                "cycleIndex": 1,
+                "bubbleColor": 1
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "b2"
+          },
+          "now": {
+            "elapsedMs": 4480000,
+            "epochMs": 1800003480000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b2",
+              "type": "LONG_BREAK",
+              "status": "RUNNING",
+              "durationMs": 900000,
+              "deadlineElapsedMs": 5380000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 5380000,
+            "epochMs": 1800004380000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "type": "LONG_BREAK",
+              "status": "COMPLETED",
+              "cycleCompleted": 0
+            },
+            "recorded": [
+              {
+                "id": "b2",
+                "type": "LONG_BREAK",
+                "status": "COMPLETED"
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "PrepareNext",
+            "newSessionId": "f3"
+          },
+          "now": {
+            "elapsedMs": 5440000,
+            "epochMs": 1800004440000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "f3",
+              "type": "FOCUS",
+              "status": "IDLE",
+              "cycleCompleted": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "reboot while running interrupts; the notice is acknowledged once",
+      "steps": [
+        {
+          "cmd": {
+            "type": "SetIntent",
+            "intent": "  Chapter 4 notes  ",
+            "newSessionId": "n"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "intent": "Chapter 4 notes",
+              "status": "IDLE"
+            },
+            "effects": ["CancelAlarm", "ClearNotifications", "UpdateWidget"]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            },
+            "effects": [
+              "RememberIntent",
+              "ClearNotifications",
+              "ScheduleAlarm",
+              "ShowOngoing",
+              "UpdateWidget"
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 40000,
+            "epochMs": 1800000720000,
+            "bootCount": 8,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s1",
+              "type": "FOCUS",
+              "status": "IDLE",
+              "intent": "Chapter 4 notes",
+              "interruptedNoticePending": true,
+              "cycleCompleted": 0
+            },
+            "effects": [
+              "RecordSession",
+              "ClearNotifications",
+              "CancelAlarm",
+              "ClearNotifications",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "INTERRUPTED",
+                "focusedMs": 0,
+                "intent": "Chapter 4 notes",
+                "endedAtEpochMs": 1800000720000,
+                "bubbleColor": null
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "AckInterrupted",
+            "newSessionId": "n"
+          },
+          "now": {
+            "elapsedMs": 50000,
+            "epochMs": 1800000780000,
+            "bootCount": 8,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "interruptedNoticePending": false,
+              "status": "IDLE"
+            },
+            "effects": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "reboot while paused changes nothing; resume uses the new boot",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1600000,
+            "epochMs": 1800000600000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED",
+              "remainingMs": 900000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 30000,
+            "epochMs": 1800003600000,
+            "bootCount": 8,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "PAUSED",
+              "remainingMs": 900000,
+              "interruptedNoticePending": false
+            },
+            "effects": ["CancelAlarm", "ShowOngoing", "UpdateWidget"],
+            "recorded": []
+          }
+        },
+        {
+          "cmd": {
+            "type": "Resume",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 60000,
+            "epochMs": 1800003660000,
+            "bootCount": 8,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "deadlineElapsedMs": 960000,
+              "bootCount": 8
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 960000,
+            "epochMs": 1800004560000,
+            "bootCount": 8,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "COMPLETED"
+            },
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "COMPLETED",
+                "focusedMs": 1500000,
+                "startedAtEpochMs": 1800000000000,
+                "endedAtEpochMs": 1800004560000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "background: break auto-starts chained from the focus deadline, one transition per reconcile, focus never auto-starts",
+      "settings": {
+        "autoStartBreaks": true,
+        "autoStartFocus": true
+      },
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "b1"
+          },
+          "now": {
+            "elapsedMs": 3700000,
+            "epochMs": 1800002700000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2800000,
+              "startedAtEpochMs": 1800001500000,
+              "cycleCompleted": 1
+            },
+            "effects": [
+              "RecordSession",
+              "ShowCompletion",
+              "ScheduleAlarm",
+              "ShowOngoing",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "COMPLETED",
+                "endedAtEpochMs": 1800001500000
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "f2"
+          },
+          "now": {
+            "elapsedMs": 3700000,
+            "epochMs": 1800002700000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            },
+            "effects": [
+              "RecordSession",
+              "ShowCompletion",
+              "CancelAlarm",
+              "ClearNotifications",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "b1",
+                "type": "SHORT_BREAK",
+                "status": "COMPLETED",
+                "endedAtEpochMs": 1800001800000
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "f3"
+          },
+          "now": {
+            "elapsedMs": 3760000,
+            "epochMs": 1800002760000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "status": "COMPLETED"
+            },
+            "effects": ["CancelAlarm", "ClearNotifications", "UpdateWidget"],
+            "recorded": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "foreground: focus auto-starts when the user is there as the break ends",
+      "settings": {
+        "autoStartFocus": true
+      },
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": true,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 2500000,
+            "epochMs": 1800001500000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "b1"
+          },
+          "now": {
+            "elapsedMs": 2500000,
+            "epochMs": 1800001500000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 2800000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": true,
+            "newSessionId": "f2"
+          },
+          "now": {
+            "elapsedMs": 2800800,
+            "epochMs": 1800001800800,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "f2",
+              "type": "FOCUS",
+              "status": "RUNNING",
+              "deadlineElapsedMs": 4300000,
+              "startedAtEpochMs": 1800001800000,
+              "cycleCompleted": 1
+            },
+            "effects": [
+              "RecordSession",
+              "ShowCompletion",
+              "ScheduleAlarm",
+              "ShowOngoing",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "b1",
+                "status": "COMPLETED"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "foreground but late: the break ended while the user was away, so focus is not started",
+      "settings": {
+        "autoStartFocus": true
+      },
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Skip",
+            "newSessionId": "b1"
+          },
+          "now": {
+            "elapsedMs": 1060000,
+            "epochMs": 1800000060000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "IDLE"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 1060000,
+            "epochMs": 1800000060000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "deadlineElapsedMs": 1360000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": true,
+            "newSessionId": "f2"
+          },
+          "now": {
+            "elapsedMs": 1960000,
+            "epochMs": 1800000960000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "b1",
+              "type": "SHORT_BREAK",
+              "status": "COMPLETED"
+            },
+            "recorded": [
+              {
+                "id": "b1",
+                "status": "COMPLETED",
+                "endedAtEpochMs": 1800000360000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "settings changes never alter a started session; an idle one follows them",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "settings": {
+            "focusMin": 50
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "IDLE",
+              "durationMs": 3000000,
+              "remainingMs": 3000000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "settings": {
+            "focusMin": 30
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "durationMs": 1800000,
+              "deadlineElapsedMs": 2800000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "settings": {
+            "focusMin": 1
+          },
+          "now": {
+            "elapsedMs": 1600000,
+            "epochMs": 1800000600000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "durationMs": 1800000,
+              "deadlineElapsedMs": 2800000
+            },
+            "recorded": []
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "x"
+          },
+          "settings": {
+            "focusMin": 180
+          },
+          "now": {
+            "elapsedMs": 2200000,
+            "epochMs": 1800001200000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "PAUSED",
+              "durationMs": 1800000,
+              "remainingMs": 600000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "a session that crosses midnight belongs to the new day",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800053400000,
+            "bootCount": 7,
+            "tzOffsetMin": 60
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 2500000,
+            "epochMs": 1800054900000,
+            "bootCount": 7,
+            "tzOffsetMin": 60
+          },
+          "expect": {
+            "state": {
+              "status": "COMPLETED"
+            },
+            "recorded": [
+              {
+                "id": "s0",
+                "localDate": "2027-01-16",
+                "tzOffsetMin": 60,
+                "startedAtEpochMs": 1800053400000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "a command that arrives after the deadline completes the session instead",
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING"
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Pause",
+            "newSessionId": "x",
+            "sessionId": "s0"
+          },
+          "now": {
+            "elapsedMs": 2501000,
+            "epochMs": 1800001501000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "s0",
+              "status": "COMPLETED",
+              "cycleCompleted": 1
+            },
+            "effects": [
+              "RecordSession",
+              "ShowCompletion",
+              "CancelAlarm",
+              "ClearNotifications",
+              "UpdateWidget"
+            ],
+            "recorded": [
+              {
+                "id": "s0",
+                "status": "COMPLETED",
+                "endedAtEpochMs": 1800001500000
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Skip",
+            "newSessionId": "f2",
+            "sessionId": "s0"
+          },
+          "now": {
+            "elapsedMs": 2560000,
+            "epochMs": 1800001560000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "sessionId": "f2",
+              "type": "FOCUS",
+              "status": "IDLE",
+              "cycleCompleted": 1
+            },
+            "recorded": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "durations of 1 and 180 minutes",
+      "settings": {
+        "focusMin": 180,
+        "shortBreakMin": 1
+      },
+      "steps": [
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "s1"
+          },
+          "now": {
+            "elapsedMs": 1000000,
+            "epochMs": 1800000000000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "RUNNING",
+              "durationMs": 10800000,
+              "deadlineElapsedMs": 11800000
+            }
+          }
+        },
+        {
+          "cmd": {
+            "type": "Reconcile",
+            "foreground": false,
+            "newSessionId": "x"
+          },
+          "now": {
+            "elapsedMs": 11800000,
+            "epochMs": 1800010800000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "status": "COMPLETED"
+            },
+            "recorded": [
+              {
+                "focusedMs": 10800000
+              }
+            ]
+          }
+        },
+        {
+          "cmd": {
+            "type": "Start",
+            "newSessionId": "b1"
+          },
+          "now": {
+            "elapsedMs": 11800000,
+            "epochMs": 1800010800000,
+            "bootCount": 7,
+            "tzOffsetMin": 0
+          },
+          "expect": {
+            "state": {
+              "type": "SHORT_BREAK",
+              "status": "RUNNING",
+              "durationMs": 60000,
+              "deadlineElapsedMs": 11860000
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
