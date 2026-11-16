@@ -1,4 +1,4 @@
-Resume here: Phase 2 PR — get CI green, merge, publish `phase-2`, send the 📱 Phase 2 gate (native spike checklist, combined with the still-open Phase 0 launch check), then stop.
+Resume here: 📱 Phase 2 gate — waiting for the owner's spike results for `phase-2` (and phone model). Use them to decide headless JS vs Kotlin mirror (DECISIONS entry) before Phase 3 on `phase-3-data-controller`.
 
 # Progress
 
@@ -8,7 +8,7 @@ Resume here: Phase 2 PR — get CI green, merge, publish `phase-2`, send the �
 | Bootstrap | Done | — (direct seed of empty repo, owner-approved) | — | — | — |
 | 0 — Scaffold, CI, first APK | Merged; 📱 gate sent | [#1](https://github.com/ultimategamer231/Bubble/pull/1) | [ci 43946375830](https://github.com/ultimategamer231/Bubble/actions/runs/43946375830) · [android 43946375786](https://github.com/ultimategamer231/Bubble/actions/runs/43946375786) | [phase-0-fix1](https://github.com/ultimategamer231/Bubble/releases/tag/phase-0-fix1) · 121,326,550 bytes (`phase-0` is superseded: no JS bundle) | waiting |
 | 1 — Pure domain | Done | [#2](https://github.com/ultimategamer231/Bubble/pull/2) | [ci 43953509699](https://github.com/ultimategamer231/Bubble/actions/runs/43953509699) · [android 43953509692](https://github.com/ultimategamer231/Bubble/actions/runs/43953509692) | n/a (no phone gate) | n/a |
-| 2 — Native spike | In review | pending | pending | pending | pending |
+| 2 — Native spike | Merged; 📱 gate sent | [#3](https://github.com/ultimategamer231/Bubble/pull/3) | [ci 43979614417](https://github.com/ultimategamer231/Bubble/actions/runs/43979614417) · [android 43979614609](https://github.com/ultimategamer231/Bubble/actions/runs/43979614609) | [phase-2](https://github.com/ultimategamer231/Bubble/releases/tag/phase-2) · 121,474,638 bytes | waiting |
 | 3 — Data + TimerController | Not started | | | | |
 | 4 — UI | Not started | | | | |
 | 5 — Notifications & reliability | Not started | | | | |
@@ -85,7 +85,7 @@ Decisions: T-19 to T-22. Blockers: none.
 CI: PR #2 green — [ci 43953509699](https://github.com/ultimategamer231/Bubble/actions/runs/43953509699), [android 43953509692](https://github.com/ultimategamer231/Bubble/actions/runs/43953509692) (11.5 min, includes the new bundle check). Squash-merged as `f92b97c`.
 Next: Phase 0 gate (owner), then Phase 2 native spike.
 
-### Phase 2 — 2026-11-16 (in review)
+### Phase 2 — 2026-11-16
 Work done
 - `modules/focus-native` (local Expo module, autolinked: `npx expo-modules-autolinking resolve --platform android` lists `com.corexlr.focusbubble.focusnative.FocusNativeModule`).
   - Kotlin: `FocusNativeModule`, `FocusContract`, `Clock`, `Alarms` (exact with inexact fallback), `Notifications` (two channels, chronometer countdown, Pause/Resume/End, completion + button), `AlertPlayer`/`AlertGate` (silent/DND gating), `Receivers` (alarm, command, boot), `FocusHeadlessService`, `DynamicPalette`, `Prefs`.
@@ -103,4 +103,7 @@ Local results
 - Kotlin cannot be compiled in this sandbox (no Android SDK); it is compiled, linted and unit-tested only in CI.
 
 Decisions: T-24 to T-27; O-02 resolved. Blockers: none.
-Next: CI → merge → `phase-2` APK → 📱 gate → decide headless JS vs Kotlin mirror.
+CI: PR #3 green on the first run — [ci 43979614417](https://github.com/ultimategamer231/Bubble/actions/runs/43979614417), [android 43979614609](https://github.com/ultimategamer231/Bubble/actions/runs/43979614609) (`BUILD SUCCESSFUL in 9m 40s`; log shows `:focus-native:compileDebugKotlin`, `:focus-native:testDebugUnitTest`, `:focus-native:lintDebug`). Squash-merged as `ab330e5`.
+Release: https://github.com/ultimategamer231/Bubble/releases/tag/phase-2 — `FocusBubble-phase-2-debug.apk`, **121,474,638 bytes**, sha256 `5c5729b9…da12`. Verified by download: JS bundle present and contains the debug screen marker and the `FocusCommand` task; chime and status icon resources present.
+📱 Gate sent 2026-11-16. Owner result: waiting.
+Next: owner's spike results → DECISIONS entry (headless JS vs Kotlin mirror) → Phase 3.
