@@ -51,8 +51,8 @@ Pure function, no side effects:
 reduce(state: ActiveTimer, cmd: Command, now: Now, settings: Settings)
   : { next: ActiveTimer; effects: Effect[] }
 type Now = { elapsedMs: number; epochMs: number; bootCount: number; tzOffsetMin: number }
-type Command = Start | Pause | Resume | Reset | Skip | SetIntent | Reconcile | PrepareNext
-type Effect = RecordSession | ScheduleAlarm | CancelAlarm | ShowOngoing | ShowCompletion | ClearNotifications | UpdateWidget
+type Command = Start | Pause | Resume | Reset | Skip | SetIntent | Reconcile | PrepareNext | AckInterrupted
+type Effect = RecordSession | RememberIntent | ScheduleAlarm | CancelAlarm | ShowOngoing | ShowCompletion | ClearNotifications | UpdateWidget
 ```
 Rules:
 - Remaining while running = `deadlineElapsedMs - now.elapsedMs`. Never a decrementing counter.
@@ -60,6 +60,7 @@ Rules:
 - Every command is idempotent: Pause when paused = no-op; Start when running = no-op; a stale command carrying an old `sessionId` = no-op. Widget/notification commands always carry the `sessionId` they were rendered with.
 - `Reconcile` is the only path to COMPLETED. It fires on app foreground, headless alarm task, boot, every command, and the UI tick when remaining ≤ 0.
 - Completion produces exactly one `RecordSession` effect for a given session ID.
+- Implementation notes (decision T-19): every command carries a caller-generated `newSessionId` so the reducer stays pure; every command first catches up with the clock, and if that ends the session the command itself is dropped; the active row rests only in IDLE / RUNNING / PAUSED / COMPLETED (CANCELLED and INTERRUPTED are written to history and the next session is prepared at once); platform effects are derived from the resulting state (`platformEffectsFor`), which is what lets Reconcile re-apply them.
 
 ### Auto-start rules (prevent phantom bubbles)
 - Auto-start breaks: a focus→break transition may start the break even while the app is backgrounded; the break's deadline is chained from the focus deadline.
