@@ -55,6 +55,7 @@ const config: ExpoConfig = {
     // PRD §4: minimum Android 8.0. React Native's own default is lower (24), so pin it (T-12).
     ['expo-build-properties', { android: { minSdkVersion: 26 } }],
     './plugins/withReleaseNoInternet',
+    './plugins/withStandaloneDebug',
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
 };

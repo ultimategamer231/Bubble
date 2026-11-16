@@ -31,3 +31,18 @@ describe('withLintCleanStyles', () => {
     expect(out.resources.$['xmlns:tools']).toBe('http://schemas.android.com/tools');
   });
 });
+
+describe('withStandaloneDebug', () => {
+  const { addStandaloneDebug } = require('../plugins/withStandaloneDebug');
+  const gradle = 'react {\n    // debuggableVariants = ["liteDebug", "prodDebug"]\n}\n';
+
+  it('adds the property-controlled debuggableVariants line once', () => {
+    const once = addStandaloneDebug(gradle);
+    expect(once).toContain("findProperty('focusBubble.standaloneDebug')");
+    expect(addStandaloneDebug(once)).toBe(once);
+  });
+
+  it('fails loudly if the Expo template changes', () => {
+    expect(() => addStandaloneDebug('react {}')).toThrow(/debuggableVariants marker/);
+  });
+});
