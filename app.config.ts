@@ -41,6 +41,7 @@ const config: ExpoConfig = {
       'expo-font',
       { fonts: ['./assets/fonts/Nunito_600SemiBold.ttf', './assets/fonts/Nunito_700Bold.ttf'] },
     ],
+    './plugins/withLintCleanStyles', // must come before expo-splash-screen
     [
       'expo-splash-screen',
       {

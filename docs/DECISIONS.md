@@ -40,6 +40,7 @@ Format: ID · decision · reason · status. Claude Code appends new entries; it 
 | T-15 | 2026-11-16 | Routes live in root `app/` (ARCHITECTURE §2), not the template's `src/app/`. `react-dom` is pinned at the SDK version as a dependency although the app is Android-only | Follows the architecture doc. `react-dom` is an optional peer of expo-router's dependencies; without the pin npm resolves a newer one and fails the install. It is not bundled into the Android app |
 | T-16 | 2026-11-16 | Workflow: `main` was seeded directly once (empty repo, owner-approved). Phase APKs are published by running `android.yml` manually with `release_tag`, which creates the tag and pre-release with `GITHUB_TOKEN` | The cloud session cannot push tags reliably or use `gh`; RELEASE.md's "push a tag" step is replaced by the workflow input |
 | T-17 | 2026-11-16 | Test device: Samsung, Android 14 / One UI 6 (exact model recorded at the Phase 0 gate) | Owner-stated; QA checklists are tailored to One UI |
+| T-18 | 2026-11-16 | CI builds only `arm64-v8a` and `armeabi-v7a` (no x86 emulator ABIs). `plugins/withLintCleanStyles.js` annotates Expo's generated splash style so `lintDebug` passes on minSdk 26 | No emulator is used anywhere; first CI build took 22 min with four ABIs. The lint error (`windowSplashScreenBehavior requires API 33`) comes from generated code and is harmless at runtime |
 
 ## Open (decide during build; non-blocking)
 | ID | Question | Default until decided |

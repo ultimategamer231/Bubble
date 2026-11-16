@@ -55,6 +55,9 @@ Local results
 - `npx jest --ci` → 2 suites, 2 tests passed
 - `npx expo-doctor` → "20/20 checks passed. No issues detected!"
 
-Decisions: T-12 to T-17 (see DECISIONS.md); O-05 resolved (repo public).
+CI history
+- Run 1 (https://github.com/ultimategamer231/Bubble/actions/runs/43942189226): `ci.yml` green; `android.yml` **failed** at `:app:lintDebug` — `styles.xml:13: Error: android:windowSplashScreenBehavior requires API level 33 (current min is 26) [NewApi]` (Expo-generated splash style). Fix: `plugins/withLintCleanStyles.js` adds `tools:targetApi="33"`; verified in the local prebuild output. Also limited CI to arm ABIs (T-18).
+
+Decisions: T-12 to T-18 (see DECISIONS.md); O-05 resolved (repo public).
 Blockers: none.
 Next: CI green on the PR → merge → run `android.yml` on `main` with `release_tag=phase-0` → verify the release asset → 📱 gate.
