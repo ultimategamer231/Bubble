@@ -1,0 +1,47 @@
+# Node / Expo
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.tsbuildinfo
+coverage/
+npm-debug.*
+yarn-error.*
+
+# Generated native projects (Continuous Native Generation)
+/android/
+/ios/
+
+# Native module build output
+modules/**/android/build/
+modules/**/android/.gradle/
+.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+.cxx/
+captures/
+
+# Binaries
+*.apk
+*.aab
+*.ipa
+
+# Secrets / signing
+*.jks
+*.keystore
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+.env
+.env.*
+!.env.example
+credentials.json
+google-services.json
+
+# OS
+.DS_Store
+Thumbs.db

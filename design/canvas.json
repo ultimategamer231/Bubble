@@ -1,0 +1,176 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-16T19:40:00Z"
+ },
+ "title": "Focus Bubble — v1.0 Mockups",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Focus · idle"
+  },
+  "FocusRunning.dc.html": {
+   "x": 470,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Focus · running"
+  },
+  "FocusPaused.dc.html": {
+   "x": 940,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Focus · paused"
+  },
+  "FocusComplete.dc.html": {
+   "x": 1410,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Focus · bubble earned"
+  },
+  "FocusBreak.dc.html": {
+   "x": 1880,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Short break · running"
+  },
+  "Jar.dc.html": {
+   "x": 0,
+   "y": 1204,
+   "w": 390,
+   "h": 844,
+   "title": "Jar · today + history"
+  },
+  "JarEmpty.dc.html": {
+   "x": 470,
+   "y": 1204,
+   "w": 390,
+   "h": 844,
+   "title": "Jar · empty"
+  },
+  "Insights.dc.html": {
+   "x": 940,
+   "y": 1204,
+   "w": 390,
+   "h": 844,
+   "title": "Insights"
+  },
+  "Settings.dc.html": {
+   "x": 1410,
+   "y": 1204,
+   "w": 390,
+   "h": 1720,
+   "title": "Settings (full scroll)"
+  },
+  "PermissionSheet.dc.html": {
+   "x": 0,
+   "y": 3284,
+   "w": 390,
+   "h": 844,
+   "title": "Notification explainer (first Start)"
+  },
+  "EndDialog.dc.html": {
+   "x": 470,
+   "y": 3284,
+   "w": 390,
+   "h": 844,
+   "title": "End session confirmation"
+  },
+  "FocusRunningDark.dc.html": {
+   "x": 940,
+   "y": 3284,
+   "w": 390,
+   "h": 844,
+   "title": "Focus · running · dark"
+  },
+  "JarDark.dc.html": {
+   "x": 1410,
+   "y": 3284,
+   "w": 390,
+   "h": 844,
+   "title": "Jar · dark"
+  },
+  "InsightsDark.dc.html": {
+   "x": 1880,
+   "y": 3284,
+   "w": 390,
+   "h": 844,
+   "title": "Insights · dark"
+  },
+  "SystemSurfaces.dc.html": {
+   "x": 2350,
+   "y": 3284,
+   "w": 960,
+   "h": 720,
+   "title": "Widget, notifications, icon"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "FocusRunning.dc.html",
+  "FocusPaused.dc.html",
+  "FocusComplete.dc.html",
+  "FocusBreak.dc.html",
+  "Jar.dc.html",
+  "JarEmpty.dc.html",
+  "Insights.dc.html",
+  "Settings.dc.html",
+  "PermissionSheet.dc.html",
+  "EndDialog.dc.html",
+  "FocusRunningDark.dc.html",
+  "JarDark.dc.html",
+  "InsightsDark.dc.html",
+  "SystemSurfaces.dc.html"
+ ],
+ "notes": {
+  "row0": {
+   "x": 0,
+   "y": -240,
+   "text": "Focus",
+   "kind": "title1",
+   "maxW": 2270
+  },
+  "n_bubble": {
+   "x": 2350,
+   "y": 0,
+   "w": 320,
+   "size": "m",
+   "fill": "teal",
+   "text": "Bubble timer: liquid level = elapsed ÷ total. Full bubble = session done. Gentle wobble only while running; none with Remove animations. Digits and label always use the text colour on top of the liquid."
+  },
+  "row1": {
+   "x": 0,
+   "y": 964,
+   "text": "Jar · Insights · Settings",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "n_jar": {
+   "x": 1880,
+   "y": 1204,
+   "w": 320,
+   "size": "m",
+   "fill": "orange",
+   "text": "One bubble per completed focus session. Size grows with length (25 min ≈ 48dp). Colour and position are deterministic per session/day. Abandoned sessions never earn a bubble; nothing is ever popped."
+  },
+  "row2": {
+   "x": 0,
+   "y": 3044,
+   "text": "Dialogs · dark mode · widget & notifications",
+   "kind": "title1",
+   "maxW": 3310
+  }
+ },
+ "designSystems": []
+}
