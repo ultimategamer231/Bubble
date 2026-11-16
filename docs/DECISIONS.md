@@ -45,6 +45,7 @@ Format: ID · decision · reason · status. Claude Code appends new entries; it 
 | T-20 | 2026-11-16 | "In the foreground when the break ends" (auto-start focus) = a foreground Reconcile that notices the break's end within 5 s. Later than that, the break rests as COMPLETED and focus waits for a tap | ARCHITECTURE §3: the app never starts a focus session the user isn't present for |
 | T-21 | 2026-11-16 | The focus intent is carried across breaks into the next focus session (break rows store no intent). Skipping or finishing a long break resets the cycle; skipping a focus never advances it | People usually continue the same task; the docs didn't say |
 | T-22 | 2026-11-16 | Break completions also raise a completion alert (`ShowCompletion` with the break row) | UI_UX §5 only words the focus alert, but a break that ends silently in the background is useless. Copy: "Break's over" / "Ready when you are." |
+| T-23 | 2026-11-16 | Phase test APKs are debug builds with the JS bundle embedded (`-PfocusBubble.standaloneDebug=true`, `plugins/withStandaloneDebug.js`) | A stock debug APK needs Metro on a computer; the owner tests on a phone alone. Still a debug build (debuggable, debug-signed, INTERNET present), so the Phase 2 debug screen is available in it |
 
 ## Open (decide during build; non-blocking)
 | ID | Question | Default until decided |
