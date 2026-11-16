@@ -45,3 +45,8 @@ google-services.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Expo generated types
+expo-env.d.ts
+.kotlin/
+.metro-health-check*
