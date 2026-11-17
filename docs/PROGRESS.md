@@ -16,7 +16,12 @@ Resume here: 📱 Phase 2 gate — waiting for the owner's spike results for `ph
 | 7 — QA + signed release | Not started | | | | |
 
 ## Test device (owner)
-Samsung, Android 14 / One UI 6 (owner-stated 2026-11-16). Exact model: **not yet given — ask at the Phase 0 gate.**
+**Samsung Galaxy A24, SM-A245F — Android 13, One UI 5.1** (build `TP1A.220624.014.A245FXXS3AWH4`). Source: owner's screenshot of Settings → About phone → Software information, 2026-11-17. This corrects the earlier owner-stated "Android 14 / One UI 6".
+Consequences for testing:
+- Android 13 asks for `POST_NOTIFICATIONS` at runtime (same as 14), so the permission flow is exercised.
+- Android 13 grants "Alarms & reminders" (exact alarms) **by default**; the Android 14 default-deny path cannot be observed on this phone. It can still be turned off by hand to test the inexact fallback.
+- Android 14-only behaviour (swipe-dismissable ongoing notification) is NOT verifiable on this device.
+- The A24 is a budget-class phone (Helio G99), which is useful for the "≤3 s with the app dead" acceptance.
 
 ## Environment notes (apply to every phase)
 - Cloud sandbox: Node v22.23.4, npm 10.9.9, git 2.43.0. No Android SDK or emulator; Gradle runs only in GitHub Actions.
